@@ -221,3 +221,6 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,macos,intellij+all,windows,visualstudiocode
+/src/main/generated/fastcampus/projectboard/domain/QArticle.java
+/src/main/generated/fastcampus/projectboard/domain/QArticleComment.java
+/src/main/generated/fastcampus/projectboard/domain/QAuditingFields.java
