@@ -1,7 +1,7 @@
 package fastcampus.projectboard.repository;
 
-import fastcampus.projectboard.config.JpaConfig;
 import fastcampus.projectboard.domain.Article;
+import fastcampus.projectboard.domain.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +14,20 @@ import static org.assertj.core.api.Assertions.*;
 
 
 @DisplayName("JPA 연결 테스트")
-@Import(JpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTests {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public JpaRepositoryTests(
             @Autowired ArticleRepository articleRepository,
-            @Autowired ArticleCommentRepository articleCommentRepository) {
+            @Autowired ArticleCommentRepository articleCommentRepository,
+            @Autowired UserAccountRepository userAccountRepository) {
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select 테스트")
@@ -46,9 +48,10 @@ class JpaRepositoryTests {
     void givenTestData_whenInserting_thenWorksFine(){
         //given
         long count = articleRepository.count();
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
 
         //when
-        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "new hashtag"));
+        Article savedArticle = articleRepository.save(Article.of(userAccount, "new article", "new content", "new hashtag"));
 
         //then
         assertThat(articleRepository.findAll())
