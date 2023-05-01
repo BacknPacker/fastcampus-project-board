@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ class JpaRepositoryTests {
     void givenTestData_whenInserting_thenWorksFine(){
         //given
         long count = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("que2", "pw", null, null, null));
 
         //when
         Article savedArticle = articleRepository.save(Article.of(userAccount, "new article", "new content", "new hashtag"));
