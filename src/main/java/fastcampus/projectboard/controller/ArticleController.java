@@ -84,7 +84,7 @@ public class ArticleController {
     public String postNewArticle(ArticleRequest articleRequest) {
         // TODO: 인증 정보를 넣어줘야 한다.
         articleService.saveArticle(articleRequest.toDto(UserAccountDto.of(
-                "que", "asdf1234", "que@mail.com", "que", "memo", null, null, null, null
+                "que", "asdf1234", "que@mail.com", "que", "memo"
         )));
 
         return "redirect:/articles";
@@ -104,7 +104,7 @@ public class ArticleController {
     public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest) {
         // TODO: 인증 정보를 넣어줘야 한다.
         articleService.updateArticle(articleId, articleRequest.toDto(UserAccountDto.of(
-                "que", "asdf1234", "que@mail.com", "que", "memo", null, null, null, null
+                "que", "asdf1234", "que@mail.com", "que", "memo"
         )));
 
         return "redirect:/articles/" + articleId;
