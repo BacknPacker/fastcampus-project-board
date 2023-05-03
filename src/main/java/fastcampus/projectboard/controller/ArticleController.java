@@ -39,6 +39,7 @@ public class ArticleController {
         List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
         model.addAttribute("articles", articles);
         model.addAttribute("paginationBarNumbers", paginationBarNumbers);
+        model.addAttribute("searchTypes", SearchType.values());
         return "articles/index";
     }
     @GetMapping("/{articleId}")
