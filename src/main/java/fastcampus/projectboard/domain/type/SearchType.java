@@ -6,8 +6,8 @@ public enum SearchType {
     TITLE("제목"),
     CONTENT("본문"),
     ID("유저 ID"),
-    HASHTAG("닉네임"),
-    NICKNAME("해시태그");
+    HASHTAG("해시태그"),
+    NICKNAME("닉네임");
 
     @Getter
     private final String description;
