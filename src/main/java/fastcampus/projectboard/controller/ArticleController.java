@@ -2,10 +2,11 @@ package fastcampus.projectboard.controller;
 
 import fastcampus.projectboard.domain.constant.FormStatus;
 import fastcampus.projectboard.domain.constant.SearchType;
-import fastcampus.projectboard.domain.request.ArticleRequest;
+import fastcampus.projectboard.dto.request.ArticleRequest;
 import fastcampus.projectboard.dto.UserAccountDto;
-import fastcampus.projectboard.response.ArticleResponse;
-import fastcampus.projectboard.response.ArticleWithCommentsResponse;
+import fastcampus.projectboard.dto.response.ArticleResponse;
+import fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
+import fastcampus.projectboard.dto.security.BoardPrincipal;
 import fastcampus.projectboard.service.ArticleService;
 import fastcampus.projectboard.service.PaginationService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -33,25 +35,26 @@ public class ArticleController {
             @RequestParam(required = false) SearchType searchType,
             @RequestParam(required = false) String searchValue,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            Model model
-    ){
-        Page<ArticleResponse> articles = articleService.searchArticles(searchType, searchValue, pageable)
-                .map(ArticleResponse::from);
-        List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
-        model.addAttribute("articles", articles);
-        model.addAttribute("paginationBarNumbers", paginationBarNumbers);
-        model.addAttribute("searchTypes", SearchType.values());
+            ModelMap map
+    ) {
+        Page<ArticleResponse> articles = articleService.searchArticles(searchType, searchValue, pageable).map(ArticleResponse::from);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
+
+        map.addAttribute("articles", articles);
+        map.addAttribute("paginationBarNumbers", barNumbers);
+        map.addAttribute("searchTypes", SearchType.values());
+
         return "articles/index";
     }
+
     @GetMapping("/{articleId}")
-    public String detail(
-            @PathVariable Long articleId,
-            Model model
-    ){
+    public String article(@PathVariable Long articleId, ModelMap map) {
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
-        model.addAttribute("article", article);
-        model.addAttribute("articleComments", article.articleCommentsResponses());
-        model.addAttribute("totalCount", articleService.getArticleCount());
+
+        map.addAttribute("article", article);
+        map.addAttribute("articleComments", article.articleCommentsResponse());
+        map.addAttribute("totalCount", articleService.getArticleCount());
+
         return "articles/detail";
     }
 
@@ -81,11 +84,11 @@ public class ArticleController {
     }
 
     @PostMapping ("/form")
-    public String postNewArticle(ArticleRequest articleRequest) {
-        // TODO: 인증 정보를 넣어줘야 한다.
-        articleService.saveArticle(articleRequest.toDto(UserAccountDto.of(
-                "que", "asdf1234", "que@mail.com", "que", "memo"
-        )));
+    public String postNewArticle(
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles";
     }
@@ -101,19 +104,22 @@ public class ArticleController {
     }
 
     @PostMapping ("/{articleId}/form")
-    public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest) {
-        // TODO: 인증 정보를 넣어줘야 한다.
-        articleService.updateArticle(articleId, articleRequest.toDto(UserAccountDto.of(
-                "que", "asdf1234", "que@mail.com", "que", "memo"
-        )));
+    public String updateArticle(
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleId;
     }
 
-    @PostMapping("/{articleId}/delete")
-    public String deleteArticle(@PathVariable Long articleId) {
-        // TODO: 인증 정보를 넣어줘야 한다.
-        articleService.deleteArticle(articleId);
+    @PostMapping ("/{articleId}/delete")
+    public String deleteArticle(
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal
+    ) {
+        articleService.deleteArticle(articleId, boardPrincipal.getUsername());
 
         return "redirect:/articles";
     }
