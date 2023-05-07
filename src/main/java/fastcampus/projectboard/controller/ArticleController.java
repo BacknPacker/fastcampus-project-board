@@ -3,7 +3,6 @@ package fastcampus.projectboard.controller;
 import fastcampus.projectboard.domain.constant.FormStatus;
 import fastcampus.projectboard.domain.constant.SearchType;
 import fastcampus.projectboard.dto.request.ArticleRequest;
-import fastcampus.projectboard.dto.UserAccountDto;
 import fastcampus.projectboard.dto.response.ArticleResponse;
 import fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
 import fastcampus.projectboard.dto.security.BoardPrincipal;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 

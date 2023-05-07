@@ -1,6 +1,5 @@
 package fastcampus.projectboard.controller;
 
-import fastcampus.projectboard.config.SecurityConfig;
 import fastcampus.projectboard.config.TestSecurityConfig;
 import fastcampus.projectboard.dto.request.ArticleCommentRequest;
 import fastcampus.projectboard.dto.ArticleCommentDto;
