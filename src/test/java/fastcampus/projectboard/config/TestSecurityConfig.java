@@ -2,8 +2,6 @@ package fastcampus.projectboard.config;
 
 import fastcampus.projectboard.domain.UserAccount;
 import fastcampus.projectboard.repository.UserAccountRepository;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
